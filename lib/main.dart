@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:nammakada/Plugins/Plugins.dart';
 import './entities/customerEntity.dart';
 import './modules/customermodules/customers_list.dart';
 import './Queries/processQueries.dart';
 import './modules/customermodules/add_customer.dart';
 import './entities/customerEntity.dart';
-
+import './Utils/constants.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -45,9 +46,11 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
   @override
-  void initState() {
+  void initState() async{
     super.initState();
     ProcessQueries().checktablePresent();
+    Map<String,dynamic> rslt  =  await Plugins.instance.excecute({'reqId':SQL,'query':'SELECT * FROM TB_CUST'});
+    
   }
 
   @override
@@ -55,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Dashboard"),
-        backgroundColor: Colors.blue[300],
+        backgroundColor: Colors.blue,
       ),
       body: Column(
         children: [
