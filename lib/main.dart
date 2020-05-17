@@ -6,6 +6,7 @@ import './Queries/processQueries.dart';
 import './modules/customermodules/add_customer.dart';
 import './entities/customerEntity.dart';
 import './Utils/constants.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -14,6 +15,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter App',
       home: MyHomePage(),
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        accentColor: Colors.yellowAccent
+      ),
     );
   }
 }
@@ -45,12 +50,17 @@ class _MyHomePageState extends State<MyHomePage> {
       _customers.add(nwCust);
     });
   }
+
   @override
-  void initState() async{
+  void initState() {
     super.initState();
+    fetchCustomers();
+  }
+
+  fetchCustomers() async {
     ProcessQueries().checktablePresent();
-    Map<String,dynamic> rslt  =  await Plugins.instance.excecute({'reqId':SQL,'query':'SELECT * FROM TB_CUST'});
-    
+    Map<String, dynamic> rslt = await Plugins.instance
+        .excecute({'reqId': SQL, 'query': 'SELECT * FROM TB_CUST'});
   }
 
   @override
@@ -58,18 +68,18 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Dashboard"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: Column(
-        children: [
-          Container(height: 250, child: CuatomersList(_customers)),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+            // mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[CuatomersList(_customers)]),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: new FloatingActionButton(
           elevation: 0.0,
           child: new Icon(Icons.add),
-          backgroundColor: Colors.blue,
           onPressed: () {
             _startAddNewTransaction(context);
           }),

@@ -1,71 +1,85 @@
 import 'package:flutter/material.dart';
 import '../../entities/customerEntity.dart';
+import '../../Plugins/Plugins.dart';
+import '../../Utils/constants.dart';
 
 class CuatomersList extends StatelessWidget {
   final List<Customer> custList;
   CuatomersList(this.custList);
-
-  Widget getCustomersList() {
+  listclicked(i) async{
+    print("Row clicked " + i.toString());
+    await Plugins.instance.excecute({
+      'reqId':TOAST,
+      'msg':'clicked'
+    });
+  }
+  Widget getCustomersList(context) {
     if (custList.length > 0) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(10),
+            height: MediaQuery.of(context).size.height * .06,
+            padding: EdgeInsets.all(5),
             child: Text(
               "Customer List",
               style: TextStyle(
-                  color: Colors.blue,
+                  color: Theme.of(context).primaryColor,
                   fontSize: 20,
                   fontWeight: FontWeight.bold),
             ),
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            itemBuilder: (ctx, i) {
-              return Card(
-                margin: EdgeInsets.only(top: 1, bottom: 1, left: 10, right: 10),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(left: 10),
-                      child: Text(
-                        custList[i].custName.substring(0, 1).toUpperCase(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold
+          Container(
+              height: MediaQuery.of(context).size.height * .9,
+              child: ListView.builder(
+                itemBuilder: (ctx, i) {
+                  return GestureDetector(
+                    onTap: (){
+                      listclicked(i);
+                    },
+                      child: Card(
+                            margin:EdgeInsets.only(top: 1, bottom: 1, left: 10, right: 10),
+                            child: Row(
+                      children: <Widget>[
+                        Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(left: 10),
+                          child: Text(
+                            custList[i].custName.substring(0, 1).toUpperCase(),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          padding: EdgeInsets.all(10),
+                          width: 40,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor,
+                              borderRadius: new BorderRadius.all(
+                                  new Radius.circular(50.0)),
+                              border: Border.all(
+                                  color: Theme.of(context).primaryColor)),
                         ),
-                      ),
-                      padding: EdgeInsets.all(10),
-                      width: 40,
-                      decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius:
-                              new BorderRadius.all(new Radius.circular(50.0)),
-                          border: Border.all(color: Colors.blue)),
+                        Container(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  custList[i].custName,
+                                  style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                Text(custList[i].custPhone)
+                              ],
+                            )),
+                      ],
                     ),
-                    Container(
-                        padding: EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              custList[i].custName,
-                              style: TextStyle(
-                                  color: Colors.blue[300],
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
-                            ),
-                            Text(custList[i].custPhone)
-                          ],
-                        )),
-                  ],
-                ),
-              );
-            },
-            itemCount: custList.length,
-          )
+                  ));
+                },
+                itemCount: custList.length,
+              )),
         ],
       );
     } else {
@@ -93,6 +107,6 @@ class CuatomersList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return getCustomersList();
+    return getCustomersList(context);
   }
 }

@@ -1,6 +1,7 @@
 import '../Utils/constants.dart';
 import './sqlite.dart';
 import './PluginException.dart';
+import './ToastMessage.dart';
 
 class Plugins {
   Plugins._privateConstructor();
@@ -9,16 +10,20 @@ class Plugins {
   Future<Map<String, dynamic>> excecute(Map request) async {
     Map req = request;
     Map<String, dynamic> finalresp = {};
+    List<Map<String, dynamic>> resp = [];
     String reqId = req['reqId'];
     try {
-      print("change" + reqId.toString());
       if (reqId.toString() == SQL) {
         String query = req['query'];
-        List<Map<String, dynamic>> resp =
-            await DatabaseHelper.instance.executeQuery(query);
-            formSuccessResponse(resp);
+        resp = await DatabaseHelper.instance.executeQuery(query);
+      }else if (reqId.toString() == TOAST) {
+        print("toast");
+        String msg = req['msg'];
+        resp = [{"msg":"scss"}];
+        await ToastMessage.instance.showToast(msg); 
         print("resp" + resp.toString());
       }
+      finalresp = formSuccessResponse(resp);
     } on PluginException catch (e) {
       print("Plugin exception" + e.errorCode);
       finalresp = formErrorResponse(e.errorCode,e.errorMessage);
