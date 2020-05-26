@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nammakada/Plugins/Plugins.dart';
-import './entities/customerEntity.dart';
-import './modules/customermodules/customers_list.dart';
+import './screens/postlogin.dart';
 import './Queries/processQueries.dart';
-import './modules/customermodules/add_customer.dart';
-import './entities/customerEntity.dart';
-import './Utils/constants.dart';
+import 'package:nammakada/screens/prelogin.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,73 +12,105 @@ class MyApp extends StatelessWidget {
       title: 'Flutter App',
       home: MyHomePage(),
       theme: ThemeData(
-        primarySwatch: Colors.purple,
-        accentColor: Colors.yellowAccent
-      ),
+          primarySwatch: Colors.purple, 
+          accentColor: Colors.yellowAccent,
+          primaryColorLight:Colors.purple[300],fontFamily: 'OpenSans'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  MyHomePageState createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  List<Customer> _customers = [];
+class MyHomePageState extends State<MyHomePage> {
+  String currScreen = "login";
+  bool isLogoutVisible = false;
+  bool isHomeVisible = false;
+  bool prelogin = true;
+  String userId;
 
-  void _startAddNewTransaction(BuildContext ctx) {
-    showModalBottomSheet(
-      context: ctx,
-      builder: (_) {
-        return GestureDetector(
-          onTap: () {},
-          child: AddCustomer(updateCust),
-          behavior: HitTestBehavior.opaque,
-        );
-      },
-    );
-  }
-
-  updateCust(String name, String phone) {
-    Customer nwCust = Customer(custName: name, custPhone: phone);
+  launchScreen(isprelogin,scrname) {
     setState(() {
-      _customers.add(nwCust);
+      currScreen = scrname;
+      prelogin = isprelogin;
+      if(scrname == "dashboard"){
+        isHomeVisible = false;
+        isLogoutVisible = true;
+      }else if(prelogin) {
+        isHomeVisible = false;
+        isLogoutVisible = false;
+      }else{
+        isLogoutVisible = false;
+        isHomeVisible = true;
+      }
     });
   }
+  setUserdata(luserId){
+    userId = luserId;
+  }
 
-  @override
+  getScrObj(){
+    Map<String,dynamic> scrobj = {
+      'launchScreen':launchScreen,
+      'currScreen':currScreen,
+      'setUserData':setUserdata,
+      'userData':{
+        'userId':"",
+      }
+    };
+    return scrobj;
+  }
+
+  Widget getLandingPage() {
+    return prelogin ? PreLogin(getScrObj()) : PostLogin(getScrObj());
+  }
+  onLoad() async{
+    await ProcessQueries().checktablePresent();
+
+  }
+@override
   void initState() {
     super.initState();
-    fetchCustomers();
+    //onLoad();
   }
-
-  fetchCustomers() async {
-    ProcessQueries().checktablePresent();
-    Map<String, dynamic> rslt = await Plugins.instance
-        .excecute({'reqId': SQL, 'query': 'SELECT * FROM TB_CUST'});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dashboard"),
+        title: Text(    
+          currScreen,
+          style: TextStyle(
+            color: Theme.of(context).accentColor,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Roboto',
+            
+            
+          ),
+        ),
+        actions: <Widget>[
+            // action button
+            Opacity(
+              child:IconButton(
+              icon:Icon(Icons.home),
+              onPressed: () {
+                  launchScreen(false,"dashboard");              
+                },
+            ),
+            opacity: isHomeVisible ? 1 : 0,),
+            Opacity(
+              child:IconButton(
+              icon:Icon(Icons.power_settings_new),
+              onPressed: () {
+                  launchScreen(true,"login");              
+                },
+            ),
+            opacity: isLogoutVisible ? 1 : 0,)
+            ],
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-            // mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[CuatomersList(_customers)]),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: new FloatingActionButton(
-          elevation: 0.0,
-          child: new Icon(Icons.add),
-          onPressed: () {
-            _startAddNewTransaction(context);
-          }),
+      body: getLandingPage(),
     );
   }
 }

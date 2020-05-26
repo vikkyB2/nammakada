@@ -1,23 +1,41 @@
 import 'package:flutter/foundation.dart';
 
 class Customer{
-  final String id;
-  final String companyName;
-  final String custName;
-  final String custPhone;
-  final String managerName;
-  final String managerPhone;
-  final String companyPhone;
-  final String gudownPhone;
-  final String companyCategory;
-  final String companyLandline;
-  final String branchName;
-  final String gudownAddress;
-  final String companyAddress;
-  final String logoFileName;
-  final DateTime startDt;
-  final DateTime makerDt;
+   String id;
+   String companyName;
+   String custName;
+   String custPhone;
+   String managerName;
+   String managerPhone;
+   String companyPhone;
+   String gudownPhone;
+   String companyCategory;
+   String companyLandline;
+   String branchName;
+   String gudownAddress;
+   String companyAddress;
+   String logoFileName;
+   DateTime startDt;
+   DateTime makerDt;
   
+  setVals(Map json){
+    this.id= json['id'];
+    this.companyName = json['companyName'];
+    this.companyLandline = json['companyLandline'];
+    this.companyLandline = json['companyLandline'];
+    this.companyCategory = json['companyCategory'];
+    this.companyPhone = json['companyPhone'];
+    this.custName = json['custName'];
+    this.custPhone = json['custPhone'];
+    this.managerName = json['managerName'];
+    this.managerPhone = json['managerPhone'];
+    this.gudownAddress = json['gudownAddress'];
+    this.gudownPhone = json['gudownPhone'];
+    this.branchName = json['branchName'];
+    this.logoFileName = json['logoFileName'];
+    this.makerDt = json['makerDt'];
+    this.makerDt = json['makerDt'];
+  }
   Customer({
     this.id,
     this.companyName,
@@ -25,8 +43,8 @@ class Customer{
     this.companyLandline,
     this.companyCategory,
     this.companyPhone,
-    @required this.custName,
-    @required this.custPhone,
+    this.custName,
+    this.custPhone,
     this.managerName,
     this.managerPhone,
     this.gudownAddress,
@@ -37,4 +55,5 @@ class Customer{
     this.makerDt,
   });
 
+  
 }

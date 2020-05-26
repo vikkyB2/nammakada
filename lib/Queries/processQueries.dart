@@ -6,16 +6,19 @@ class ProcessQueries {
   checktablePresent() async {
     Map<String, dynamic> rslt = await Plugins.instance
         .excecute({'reqId': SQL, 'query': 'SELECT * FROM TB_TBL_VERSION'});
+    print(rslt.toString());
     if (rslt['status'] == false && rslt['errorCode'] == 'DB-001') {
-      print("createTables");
       String createQuery = '';
       create.forEach((k, val) async {
         createQuery = formCreateQuery(val);
+        print("Creating table" + val['name']);
         if (createQuery != '') {
           await Plugins.instance.excecute({'reqId': SQL, 'query': createQuery});
           await Plugins.instance.excecute({'reqId': SQL, 'query': 'INSERT INTO TB_TBL_VERSION(TABLE_NAME,TABLE_VERSION)values("${val['name']}","${val['version'].toString()}")'});
         }
       });
+      }else{
+          //alter table has to be implemented on update of the table
       }
   }
 
@@ -42,4 +45,7 @@ class ProcessQueries {
     }
     return createQuery;
   }
+}
+formalterQuery(val){
+
 }

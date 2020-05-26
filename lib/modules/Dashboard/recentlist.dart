@@ -3,9 +3,9 @@ import '../../entities/customerEntity.dart';
 import '../../Plugins/Plugins.dart';
 import '../../Utils/constants.dart';
 
-class CustomersList extends StatelessWidget {
+class RecentList extends StatelessWidget {
   final List<Customer> custList;
-  CustomersList(this.custList);
+  RecentList(this.custList);
   listclicked(i) async{
     await Plugins.instance.excecute({
       'reqId':TOAST,
