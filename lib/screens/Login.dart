@@ -4,11 +4,11 @@ import 'package:nammakada/modules/Login/loginm.dart';
 class Login extends StatelessWidget {
   
   final launchScreen;
-  final setUserData;
-  Login(this.launchScreen,this.setUserData);
+  final setUserdata;
+  Login(this.launchScreen,this.setUserdata);
 
   @override
   Widget build(BuildContext context) {
-    return Container(child:LoginM(launchScreen,setUserData));
+    return LoginM(launchScreen,setUserdata);
   }
 }

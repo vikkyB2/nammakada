@@ -14,7 +14,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.purple, 
           accentColor: Colors.yellowAccent,
-          primaryColorLight:Colors.purple[300],fontFamily: 'OpenSans'),
+          primaryColorLight: Colors.purple[300],
+          fontFamily: 'OpenSans'),
     );
   }
 }
@@ -31,33 +32,36 @@ class MyHomePageState extends State<MyHomePage> {
   bool prelogin = true;
   String userId;
 
-  launchScreen(isprelogin,scrname) {
+  launchScreen(isprelogin, scrname) {
     setState(() {
       currScreen = scrname;
       prelogin = isprelogin;
-      if(scrname == "dashboard"){
+      if (scrname == "dashboard") {
         isHomeVisible = false;
         isLogoutVisible = true;
-      }else if(prelogin) {
+      } else if (prelogin) {
         isHomeVisible = false;
         isLogoutVisible = false;
-      }else{
+      } else {
         isLogoutVisible = false;
         isHomeVisible = true;
       }
     });
   }
-  setUserdata(luserId){
-    userId = luserId;
+
+  setUserdata(luserId) {
+    setState(() {
+      userId = luserId;
+    });
   }
 
-  getScrObj(){
-    Map<String,dynamic> scrobj = {
-      'launchScreen':launchScreen,
-      'currScreen':currScreen,
-      'setUserData':setUserdata,
-      'userData':{
-        'userId':"",
+  getScrObj() {
+    Map<String, dynamic> scrobj = {
+      'launchScreen': launchScreen,
+      'currScreen': currScreen,
+      'setUserData': setUserdata,
+      'userData': {
+        'userId': userId,
       }
     };
     return scrobj;
@@ -66,48 +70,50 @@ class MyHomePageState extends State<MyHomePage> {
   Widget getLandingPage() {
     return prelogin ? PreLogin(getScrObj()) : PostLogin(getScrObj());
   }
-  onLoad() async{
-    await ProcessQueries().checktablePresent();
 
+  onLoad() async {
+    await ProcessQueries().checktablePresent();
   }
-@override
+
+  @override
   void initState() {
     super.initState();
     //onLoad();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(    
+        title: Text(
           currScreen,
           style: TextStyle(
             color: Theme.of(context).accentColor,
             fontWeight: FontWeight.bold,
             fontFamily: 'Roboto',
-            
-            
           ),
         ),
         actions: <Widget>[
-            // action button
-            Opacity(
-              child:IconButton(
-              icon:Icon(Icons.home),
+          // action button
+          Opacity(
+            child: IconButton(
+              icon: Icon(Icons.home),
               onPressed: () {
-                  launchScreen(false,"dashboard");              
-                },
+                launchScreen(false, "dashboard");
+              },
             ),
-            opacity: isHomeVisible ? 1 : 0,),
-            Opacity(
-              child:IconButton(
-              icon:Icon(Icons.power_settings_new),
+            opacity: isHomeVisible ? 1 : 0,
+          ),
+          Opacity(
+            child: IconButton(
+              icon: Icon(Icons.power_settings_new),
               onPressed: () {
-                  launchScreen(true,"login");              
-                },
+                launchScreen(true, "login");
+              },
             ),
-            opacity: isLogoutVisible ? 1 : 0,)
-            ],
+            opacity: isLogoutVisible ? 1 : 0,
+          )
+        ],
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: getLandingPage(),

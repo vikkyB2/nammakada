@@ -3,25 +3,15 @@ import 'package:nammakada/Plugins/Plugins.dart';
 
 import 'package:nammakada/Queries/processQueries.dart';
 
-class LoginM extends StatelessWidget {
+class LoginM extends StatefulWidget {
   final launchScreen;
   final setUserdata;
   LoginM(this.launchScreen,this.setUserdata);
   @override
-  Widget build(BuildContext context) {
-    return LoginMState(launchScreen,setUserdata);
-  }
-}
-
-class LoginMState extends StatefulWidget {
-  final launchScreen;
-  final setUserdata;
-  LoginMState(this.launchScreen,this.setUserdata);
-  @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginMState> {
+class _LoginPageState extends State<LoginM> {
   Map<String, dynamic> usrrslt;
   String userId;
   String password;
@@ -35,19 +25,23 @@ class _LoginPageState extends State<LoginMState> {
   final passwordController = TextEditingController();
 
   validateUser() async {
-    bool rslt = false;
+    bool validuser = false;
     password = passwordController.text;
+    password = password.trim();
     if (isLoggedin) {
       if (checkUserId == userId && password == checkpassword) {
+        validuser = true;
         usrrslt = await Plugins.instance.excecute({
-          'reqId': "USERS",
+          'reqId': "SQL",
           'query':
               'UPDATE TB_USERS SET LAST_LOGIN = "Madhu" WHERE USER_ID = "${userId}";',
           'entity': "Customer"
         });
       } else {}
     } else {
+      validuser = true;
       userId = userIdController.text;
+      userId = userId.trim();
       usrrslt = await Plugins.instance.excecute({
         'reqId': "SQL",
         'query':
@@ -56,7 +50,7 @@ class _LoginPageState extends State<LoginMState> {
       });
     }
 
-    if (usrrslt['status'] != false) {
+    if (validuser && usrrslt['status'] != false) {
       widget.setUserdata(userId);
       widget.launchScreen(false, "dashboard");
     } else {}
@@ -72,6 +66,12 @@ class _LoginPageState extends State<LoginMState> {
     });
     if (usrrslt['status'] != false && usrrslt['resp'].length > 0) {
       userId = usrrslt['resp'][0]['USER_ID'];
+      checkUserId = usrrslt['resp'][0]['USER_ID'];
+      checkpassword = usrrslt['resp'][0]['PASS'];
+
+      userId = userId.trim();
+      checkUserId = checkUserId.trim();
+      checkpassword = checkpassword.trim();
       setState(() {
         isLoggedin = true;
         isBioauthEnabled =
@@ -170,7 +170,7 @@ class _LoginPageState extends State<LoginMState> {
           Container(
             padding: EdgeInsets.symmetric(vertical: 16.0),
             child: RaisedButton(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).accentColor,
               onPressed: () {
                 validateUser();
               },
@@ -180,7 +180,7 @@ class _LoginPageState extends State<LoginMState> {
                     fontFamily: 'Opensans',
                     fontSize: 16,
                     fontWeight: FontWeight.w100,
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).primaryColor,
                     fontStyle: FontStyle.italic),
               ),
             ),

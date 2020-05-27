@@ -9,7 +9,7 @@ class PreLogin extends StatelessWidget{
   Widget getWidget(){
     Widget screen;
     if(this.scrObj['currScreen'] == "login"){
-      screen = Login(this.scrObj['launchScreen'],this.scrObj['setUserdata']);
+      screen = Login(this.scrObj['launchScreen'],this.scrObj['setUserData']);
     }
     return screen;
   }

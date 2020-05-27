@@ -3,7 +3,6 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:nammakada/Plugins/Plugins.dart';
 import 'package:nammakada/entities/customerEntity.dart';
 import 'package:nammakada/Queries/castRslt.dart';
-import 'package:nammakada/modules/Dashboard/recentlist.dart';
 
 class AddSwiper extends StatelessWidget {
   fetchCustomers() async {

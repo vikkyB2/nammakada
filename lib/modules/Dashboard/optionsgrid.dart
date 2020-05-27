@@ -60,9 +60,9 @@ class DashboardGrid extends StatelessWidget {
                       options[index]["option"],
                       style: TextStyle(
                           color: Theme.of(context).accentColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          fontStyle: FontStyle.italic),
+                          fontWeight: FontWeight.w800,
+                          fontSize: 18,
+                          fontStyle: FontStyle.normal),
                     ),
                   ],
                 ),
